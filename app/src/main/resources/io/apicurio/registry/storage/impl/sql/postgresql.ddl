@@ -4,7 +4,15 @@
 
 CREATE TABLE apicurio (propName VARCHAR(255) NOT NULL, propValue VARCHAR(255));
 ALTER TABLE apicurio ADD PRIMARY KEY (propName);
-INSERT INTO apicurio (propName, propValue) VALUES ('db_version', 108);
+INSERT INTO apicurio (propName, propValue) VALUES ('db_version', 109);
+
+CREATE OR REPLACE FUNCTION safe_convert_to_text(data BYTEA) RETURNS TEXT AS $$
+BEGIN
+    RETURN convert_from(data, 'UTF8');
+EXCEPTION WHEN OTHERS THEN
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE TABLE sequences (seqName VARCHAR(32) NOT NULL, seqValue BIGINT NOT NULL);
 ALTER TABLE sequences ADD PRIMARY KEY (seqName);
